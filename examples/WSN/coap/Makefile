@@ -1,6 +1,8 @@
 all: er-example-server
 
-CONTIKI = ../../../..
+#CONTIKI = ../../../..
+CONTIKI = ../../..
+
 
 CFLAGS += -DPROJECT_CONF_H=\"project-conf.h\"
 
