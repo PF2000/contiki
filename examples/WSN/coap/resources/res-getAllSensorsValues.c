@@ -8,7 +8,6 @@
 #include "dev/tsl256x.h"
 
 static int loudness,dbs,temperature,humidity,light;
-static char * strTemperature,strHumidity,strLoud;
 
 static void res_get_handler(void *request, void *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset);
 
@@ -31,6 +30,10 @@ res_get_handler(void *request, void *response, uint8_t *buffer, uint16_t preferr
   //Configure light sensor
   tsl256x.configure(TSL256X_INT_OVER, 0x15B8);
 
+
+  char str1[200];
+  uint8_t hexSend1[256];
+	
 
   REST.set_header_content_type(response, REST.type.APPLICATION_JSON);//REST.type.TEXT_PLAIN);
   
@@ -62,8 +65,15 @@ res_get_handler(void *request, void *response, uint8_t *buffer, uint16_t preferr
 
   
   snprintf((char *)buffer, REST_MAX_CHUNK_SIZE, 
-	    "{\"Sensors\":{\"Temperature\":\"%02d\",\"Humidity\":\"%02d\",\"Loudness\":\"%02d\",\"Light\":\"%02d\"}}",
+	    "{\"Sensors\":{\"Temperature\":\"%02d.%02d\",\"Humidity\":\"%02d.%02d\",\"Loudness\":\"%02d\",\"Light\":\"%02d\"}}",
              temperature / 10, temperature % 10,humidity / 10, humidity % 10,loudness,light);
 
-  REST.set_response_payload(response, (uint8_t *)buffer, strlen((char *)buffer));
+
+  strcpy(str1, (char *)buffer);
+
+  int length = encriptMessage(str1, hexSend1);
+
+  REST.set_response_payload(response, hexSend1, length);
+
+  //REST.set_response_payload(response, (uint8_t *)buffer, strlen((char *)buffer));
 }

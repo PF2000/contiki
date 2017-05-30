@@ -22,12 +22,8 @@ RESOURCE(res_address,
 static void
 res_get_handler(void *request, void *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
 {
-  const char *len = NULL;
   int length = 12;
   uip_ipaddr_t addr;
-  
-  char *str;
-
 
   uip_ip6addr_u8(&addr,0xaa, 0xaa, 0x00, 0x00,
 	       0x00, 0x00, 0x00, 0x00,

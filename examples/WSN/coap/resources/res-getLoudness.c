@@ -23,6 +23,9 @@ res_get_handler(void *request, void *response, uint8_t *buffer, uint16_t preferr
   dbs = adc_sensors.value(ANALOG_GROVE_LOUDNESS);
   loudness= round(20*(0.43429*log(dbs))*10)/10;
 
+  char str1[200];
+  uint8_t hexSend1[256];
+
   if(loudness == 96){
   	loudness = -1;
   }
@@ -33,6 +36,11 @@ res_get_handler(void *request, void *response, uint8_t *buffer, uint16_t preferr
 	    "{\"Sensors\":{\"Loudness\":\"%02d\"}}",
              loudness);
 
+  strcpy(str1, (char *)buffer);
 
-  REST.set_response_payload(response, (uint8_t *)buffer, strlen((char *)buffer));
+  int length = encriptMessage(str1, hexSend1);
+
+  REST.set_response_payload(response, hexSend1, length);
+  
+  //REST.set_response_payload(response, (uint8_t *)buffer, strlen((char *)buffer));
 }

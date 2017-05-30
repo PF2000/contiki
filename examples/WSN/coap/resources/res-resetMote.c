@@ -16,12 +16,10 @@ RESOURCE(res_resetMote,
 static void
 res_get_handler(void *request, void *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
 {
-  const char *len = NULL;
   int length = 12;
   char const *const message = "Sucess";
   
   watchdog_reboot();
-
 
   memcpy(buffer, message, length);
   REST.set_header_content_type(response, REST.type.TEXT_PLAIN); /* text/plain is the default, hence this option could be omitted. */

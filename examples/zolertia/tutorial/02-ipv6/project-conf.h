@@ -83,7 +83,7 @@
 #endif
 
 #undef LLSEC802154_CONF_ENABLED
-#define LLSEC802154_CONF_ENABLED          0
+#define LLSEC802154_CONF_ENABLED          1
 #undef NETSTACK_CONF_FRAMER
 #define NETSTACK_CONF_FRAMER              noncoresec_framer
 #undef NETSTACK_CONF_LLSEC
