@@ -149,29 +149,29 @@ PROCESS_THREAD(er_example_server, ev, data)
    * WARNING: Activating twice only means alternate path, not two instances!
    * All static variables are the same for each URI path.
    */
-  rest_activate_resource(&res_hello, "test/hello");
+  //rest_activate_resource(&res_hello, "test/hello");
   ////rest_activate_resource(&res_battery, "data/battery");
   //rest_activate_resource(&res_address, "data/address");
-  rest_activate_resource(&res_resetMote, "data/resetMote");
-  rest_activate_resource(&res_getSensors, "data/getSensors");
-  rest_activate_resource(&res_getHumidity, "data/getHumidity");
-  rest_activate_resource(&res_getTemperature, "data/getTemperature");
-  rest_activate_resource(&res_getLight, "data/getLight");
-  rest_activate_resource(&res_getLoudness, "data/getLoudness");
-  rest_activate_resource(&res_getAllSensorsValues, "data/getAllSensorsValues");
-  rest_activate_resource(&res_leds, "actuators/leds");
-  rest_activate_resource(&res_ledr, "actuators/ledr");
-  rest_activate_resource(&res_ledg, "actuators/ledg");
-  rest_activate_resource(&res_ledb, "actuators/ledb");
-  rest_activate_resource(&res_toggle, "actuators/toggle");
+  rest_activate_resource(&res_resetMote, "data/Reset");
+  rest_activate_resource(&res_getSensors, "data/Sensors");
+  rest_activate_resource(&res_getHumidity, "data/Humidity");
+  rest_activate_resource(&res_getTemperature, "data/Temperature");
+  rest_activate_resource(&res_getLight, "data/Light");
+  rest_activate_resource(&res_getLoudness, "data/Loudness");
+  rest_activate_resource(&res_getAllSensorsValues, "data/AllValues");
+  rest_activate_resource(&res_leds, "actuators/Leds");
+  rest_activate_resource(&res_ledr, "actuators/LedRed");
+  rest_activate_resource(&res_ledg, "actuators/LedGreen");
+  rest_activate_resource(&res_ledb, "actuators/LedBlue");
+  //rest_activate_resource(&res_toggle, "actuators/toggle");
   //rest_activate_resource(&res_ecc, "actuators/ecc");
   //rest_activate_resource(&res_pubKeys, "actuators/pubKeys");
-  rest_activate_resource(&res_event, "sensors/button");
-  rest_activate_resource(&res_separate, "test/separate");
-  rest_activate_resource(&res_push, "test/push");
-  rest_activate_resource(&res_sub, "test/sub");
-  rest_activate_resource(&res_sht25, "sensors/sht25");
-  rest_activate_resource(&res_zoul, "sensors/zoul");
+  rest_activate_resource(&res_event, "observe/Event");
+  //rest_activate_resource(&res_separate, "test/separate");
+  //rest_activate_resource(&res_push, "test/push");
+  //rest_activate_resource(&res_sub, "test/sub");
+  //rest_activate_resource(&res_sht25, "sensors/sht25");
+  //rest_activate_resource(&res_zoul, "sensors/zoul");
 
   printf("\nCoAP server started\n");
   print_radio_values();
