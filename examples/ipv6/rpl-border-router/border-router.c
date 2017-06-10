@@ -57,6 +57,8 @@
 #define DEBUG DEBUG_NONE
 #include "net/ip/uip-debug.h"
 
+#include "lib/aes-128.h"
+
 static uip_ipaddr_t prefix;
 static uint8_t prefix_set;
 

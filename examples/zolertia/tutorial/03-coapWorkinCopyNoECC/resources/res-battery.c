@@ -36,23 +36,19 @@
  *      Matthias Kovatsch <kovatsch@inf.ethz.ch>
  */
 
-#include <stdlib.h>
+#include "contiki.h"
+
+#if PLATFORM_HAS_BATTERY
+
 #include <string.h>
 #include "rest-engine.h"
-
-#include "EECHelper.h"
-#include "AESMessage.h"
+#include "dev/battery-sensor.h"
 
 static void res_get_handler(void *request, void *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset);
 
-/*
- * A handler function named [resource name]_handler must be implemented for each RESOURCE.
- * A buffer for the response payload is provided through the buffer pointer. Simple resources can ignore
- * preferred_size and offset, but must respect the REST_MAX_CHUNK_SIZE limit for the buffer.
- * If a smaller block size is requested for CoAP, the REST framework automatically splits the data.
- */
-RESOURCE(res_ola,
-         "title=\"Olá Mundo1: ?len=0..\";rt=\"Text\"",
+/* A simple getter example. Returns the reading from light sensor with a simple etag */
+RESOURCE(res_battery,
+         "title=\"Battery status\";rt=\"Battery\"",
          res_get_handler,
          NULL,
          NULL,
@@ -61,32 +57,25 @@ RESOURCE(res_ola,
 static void
 res_get_handler(void *request, void *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
 {
-  const char *len = NULL;
-  /* Some data that has the length up to REST_MAX_CHUNK_SIZE. For more, see the chunk resource. */
-  char const *const message = "Olá Mundo! ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaay";
-  int length = 150; /*           |<-------->| */
-	
+  int battery = battery_sensor.value(0);
 
+  unsigned int accept = -1;
+  REST.get_header_accept(request, &accept);
 
-		printf("new key\n");
-		printKeyuint8(key);
-		printf("\n");
-		
+  if(accept == -1 || accept == REST.type.TEXT_PLAIN) {
+    REST.set_header_content_type(response, REST.type.TEXT_PLAIN);
+    snprintf((char *)buffer, REST_MAX_CHUNK_SIZE, "%d", battery);
 
-  /* The query string can be retrieved by rest_get_query() or parsed for its key-value pairs. */
-  if(REST.get_query_variable(request, "len", &len)) {
-    length = atoi(len);
-    if(length < 0) {
-      length = 0;
-    }
-    if(length > REST_MAX_CHUNK_SIZE) {
-      length = REST_MAX_CHUNK_SIZE;
-    }
-    memcpy(buffer, message, length);
+    REST.set_response_payload(response, (uint8_t *)buffer, strlen((char *)buffer));
+  } else if(accept == REST.type.APPLICATION_JSON) {
+    REST.set_header_content_type(response, REST.type.APPLICATION_JSON);
+    snprintf((char *)buffer, REST_MAX_CHUNK_SIZE, "{'battery':%d}", battery);
+
+    REST.set_response_payload(response, buffer, strlen((char *)buffer));
   } else {
-    memcpy(buffer, message, length);
-  } 
-  REST.set_header_content_type(response, REST.type.TEXT_PLAIN); /* text/plain is the default, hence this option could be omitted. */
-  REST.set_header_etag(response, (uint8_t *)&length, 1);
-  REST.set_response_payload(response, buffer, length);
+    REST.set_response_status(response, REST.status.NOT_ACCEPTABLE);
+    const char *msg = "Supporting content-types text/plain and application/json";
+    REST.set_response_payload(response, msg, strlen(msg));
+  }
 }
+#endif /* PLATFORM_HAS_BATTERY */

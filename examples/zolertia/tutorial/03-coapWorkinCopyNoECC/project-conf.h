@@ -146,4 +146,31 @@ here.
 
 
 
+
+
+
+
+
+
+/*---------------------------------------------------------------------------*/
+/* DTLS                                                                      */
+/*---------------------------------------------------------------------------*/
+
+/*
+#define DTLS_PEER_MAX 3
+
+#define DTLS_CONF_CONN_TIMEOUT 10
+
+#define DTLS_IDENTITY_HINT "Teste"
+#define DTLS_IDENTITY_HINT_LENGTH 15
+
+#define DTLS_CONF_PSK_KEY "kkkksecretPSK"
+#define DTLS_CONF_PSK_KEY_LENGTH 10
+
+
+
+#define WITH_ECDSA 1 
+*/
+
+
 #endif

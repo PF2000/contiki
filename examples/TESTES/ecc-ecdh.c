@@ -62,6 +62,16 @@ ecc_set_random(uint32_t *secret)
     secret[i] = (uint32_t)random_rand() | (uint32_t)random_rand() << 16;
   }
 }
+static void
+printCenas(uint32_t *cenas)
+{
+	int i;
+	for (i=7; i>=0; i--){
+		printf("%08X", cenas[i]);
+	}
+	printf("\n");
+}
+
 
 PROCESS(ecdh_test, "ecdh test");
 AUTOSTART_PROCESSES(&ecdh_test);
@@ -73,6 +83,7 @@ PROCESS_THREAD(ecdh_test, ev, data) {
    * Variable for Time Measurement
    */
   static rtimer_clock_t time;
+
 
   /*
    * Activate Engine
@@ -88,22 +99,27 @@ PROCESS_THREAD(ecdh_test, ev, data) {
     .process = &ecdh_test,
     .size    = 8,
   };
+
   memcpy(state.b, nist_p_256.n, sizeof(uint32_t) * 8);
-  static uint32_t secret_a[8];
+  static uint32_t secret_a[8]= { 0x106BBF67, 0xED1E6C2E, 0xA5958DCA, 0x5B3DDBAC, 0xAB7F9B52, 0xA86B1F61, 0xC89E1E2E, 0xAEAD966A };
   do {
-    ecc_set_random(secret_a);
+    //ecc_set_random(secret_a);
     memcpy(state.a, secret_a, sizeof(uint32_t) * 8);
     PT_SPAWN(&(ecdh_test.pt), &(state.pt), ecc_compare(&state));
   } while(state.result != PKA_STATUS_A_LT_B);
 
-  static uint32_t secret_b[8];
-  ecc_set_random(secret_b);
+
+
+	//-------------------------------
+  static uint32_t secret_b[8]={ 0x8F26EB8E, 0x7B3AA458, 0xE97FE351, 0xBCCB2EE1, 0xCCFC1156, 0x9FF35541, 0x06030804, 0x29E06280 };
   do {
-    ecc_set_random(secret_b);
+  //  ecc_set_random(secret_b);
     memcpy(state.a, secret_b, sizeof(uint32_t) * 8);
     PT_SPAWN(&(ecdh_test.pt), &(state.pt), ecc_compare(&state));
   } while(state.result != PKA_STATUS_A_LT_B);
 
+
+	//-------------------------------
   /*
    * Prepare Points
    */
@@ -122,6 +138,16 @@ PROCESS_THREAD(ecdh_test, ev, data) {
   memcpy(side_b.point_in.x, nist_p_256.x, sizeof(uint32_t) * 8);
   memcpy(side_b.point_in.y, nist_p_256.y, sizeof(uint32_t) * 8);
   memcpy(side_b.secret, secret_b, sizeof(secret_b));
+  
+  
+
+	printf("secret_a ");
+	printCenas(secret_a);  	
+
+	printf("secret_b ");
+	printCenas(secret_b);  
+
+
 
   /*
    * Round 1
@@ -141,10 +167,55 @@ PROCESS_THREAD(ecdh_test, ev, data) {
   /*
    * Key Exchange
    */
+  printf("Key Exchange \n ");
+
+	printf("side_a.point_in.x ");
+	printCenas(side_a.point_in.x); 
+	printf("side_a.point_in.y ");
+	printCenas(side_a.point_in.y); 
+	printf("side_b.point_in.x ");
+	printCenas(side_b.point_in.x); 
+	printf("side_b.point_in.y ");
+	printCenas(side_b.point_in.y); 
+
+   printf("Before Key Exchange \n ");
+
+	printf("side_a.point_out.x ");
+	printCenas(side_a.point_out.x); 
+	printf("side_a.point_out.y ");
+	printCenas(side_a.point_out.y); 
+	printf("side_b.point_out.x ");
+	printCenas(side_b.point_out.x); 
+	printf("side_b.point_out.y ");
+	printCenas(side_b.point_out.y); 
+
+
   memcpy(side_a.point_in.x, side_b.point_out.x, sizeof(uint32_t) * 8);
   memcpy(side_a.point_in.y, side_b.point_out.y, sizeof(uint32_t) * 8);
+  
+
   memcpy(side_b.point_in.x, side_a.point_out.x, sizeof(uint32_t) * 8);
   memcpy(side_b.point_in.y, side_a.point_out.y, sizeof(uint32_t) * 8);
+
+   printf("Key Exchange \n ");
+
+	printf("side_a.point_in.x ");
+	printCenas(side_a.point_in.x); 
+	printf("side_a.point_in.y ");
+	printCenas(side_a.point_in.y); 
+	printf("side_b.point_in.x ");
+	printCenas(side_b.point_in.x); 
+	printf("side_b.point_in.y ");
+	printCenas(side_b.point_in.y);  
+printf("OUTS \n ");
+	printf("side_a.point_out.x ");
+	printCenas(side_a.point_out.x); 
+	printf("side_a.point_out.y ");
+	printCenas(side_a.point_out.y); 
+	printf("side_b.point_out.x ");
+	printCenas(side_b.point_out.x); 
+	printf("side_b.point_out.y ");
+	printCenas(side_b.point_out.y); 
 
   /*
    * Round 2
@@ -165,6 +236,12 @@ PROCESS_THREAD(ecdh_test, ev, data) {
    */
   memcpy(state.a, side_a.point_out.x, sizeof(uint32_t) * 8);
   memcpy(state.b, side_b.point_out.x, sizeof(uint32_t) * 8);
+
+	printf("side_a.point_out.x ");
+	printCenas(side_a.point_out.x);  
+	printf("side_b.point_out.x ");
+	printCenas(side_b.point_out.x);  
+
 
   PT_SPAWN(&(ecdh_test.pt), &(state.pt), ecc_compare(&state));
   if(state.result) {

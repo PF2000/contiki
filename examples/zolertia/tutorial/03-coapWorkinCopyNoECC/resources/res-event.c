@@ -77,18 +77,9 @@ static void
 res_get_handler(void *request, void *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
 {
   REST.set_header_content_type(response, REST.type.TEXT_PLAIN);
+  REST.set_response_payload(response, buffer, snprintf((char *)buffer, preferred_size, "EVENT %lu", event_counter));
 
-
-	char str1[200];
-  uint8_t hexSend1[256];
-	
-	snprintf((char *)str1, preferred_size, "EVENT %lu", event_counter);
-
- int length = encriptMessage(str1, hexSend1);
-
-
-  REST.set_header_content_type(response, REST.type.TEXT_PLAIN); 
-  REST.set_response_payload(response, hexSend1, length);
+  /* A post_handler that handles subscriptions/observing will be called for periodic resources by the framework. */
 }
 /*
  * Additionally, res_event_handler must be implemented for each EVENT_RESOURCE.

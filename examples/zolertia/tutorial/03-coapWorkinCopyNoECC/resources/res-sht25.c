@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Institute for Pervasive Computing, ETH Zurich
+ * Copyright (c) 2014, Nimbus Centre for Embedded Systems Research, Cork Institute of Technology.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,28 +31,23 @@
 
 /**
  * \file
- *      Example resource
+ *      SHT11 Sensor Resource
+ *
+ *      This is a simple GET resource that returns the temperature in Celsius
+ *      and the humidity reading from the SHT25.
  * \author
- *      Matthias Kovatsch <kovatsch@inf.ethz.ch>
+ *      Pablo Corbalan <paul.corbalan@gmail.com>
  */
 
-#include <stdlib.h>
+#include "contiki.h"
 #include <string.h>
 #include "rest-engine.h"
-
-#include "EECHelper.h"
-#include "AESMessage.h"
+#include "dev/sht25.h"
 
 static void res_get_handler(void *request, void *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset);
 
-/*
- * A handler function named [resource name]_handler must be implemented for each RESOURCE.
- * A buffer for the response payload is provided through the buffer pointer. Simple resources can ignore
- * preferred_size and offset, but must respect the REST_MAX_CHUNK_SIZE limit for the buffer.
- * If a smaller block size is requested for CoAP, the REST framework automatically splits the data.
- */
-RESOURCE(res_ola,
-         "title=\"Olá Mundo1: ?len=0..\";rt=\"Text\"",
+RESOURCE(res_sht25,
+         "title=\"Temperature and Humidity\";rt=\"SHT25\"",
          res_get_handler,
          NULL,
          NULL,
@@ -61,32 +56,30 @@ RESOURCE(res_ola,
 static void
 res_get_handler(void *request, void *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
 {
-  const char *len = NULL;
-  /* Some data that has the length up to REST_MAX_CHUNK_SIZE. For more, see the chunk resource. */
-  char const *const message = "Olá Mundo! ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaay";
-  int length = 150; /*           |<-------->| */
-	
+  uint16_t temperature = sht25.value(SHT25_VAL_TEMP);
+  uint16_t rh = sht25.value(SHT25_VAL_HUM);
 
+  unsigned int accept = -1;
+  REST.get_header_accept(request, &accept);
 
-		printf("new key\n");
-		printKeyuint8(key);
-		printf("\n");
-		
+  if(accept == -1 || accept == REST.type.TEXT_PLAIN) {
+    REST.set_header_content_type(response, REST.type.TEXT_PLAIN);
+    snprintf((char *)buffer, REST_MAX_CHUNK_SIZE, "%u;%u", temperature, rh);
 
-  /* The query string can be retrieved by rest_get_query() or parsed for its key-value pairs. */
-  if(REST.get_query_variable(request, "len", &len)) {
-    length = atoi(len);
-    if(length < 0) {
-      length = 0;
-    }
-    if(length > REST_MAX_CHUNK_SIZE) {
-      length = REST_MAX_CHUNK_SIZE;
-    }
-    memcpy(buffer, message, length);
+    REST.set_response_payload(response, (uint8_t *)buffer, strlen((char *)buffer));
+  } else if(accept == REST.type.APPLICATION_XML) {
+    REST.set_header_content_type(response, REST.type.APPLICATION_XML);
+    snprintf((char *)buffer, REST_MAX_CHUNK_SIZE, "<Temperature =\"%u\" Humidity=\"%u\"/>", temperature, rh);
+
+    REST.set_response_payload(response, buffer, strlen((char *)buffer));
+  } else if(accept == REST.type.APPLICATION_JSON) {
+    REST.set_header_content_type(response, REST.type.APPLICATION_JSON);
+    snprintf((char *)buffer, REST_MAX_CHUNK_SIZE, "{'Sht25':{'Temperature':%u,'Humidity':%u}}", temperature, rh);
+
+    REST.set_response_payload(response, buffer, strlen((char *)buffer));
   } else {
-    memcpy(buffer, message, length);
-  } 
-  REST.set_header_content_type(response, REST.type.TEXT_PLAIN); /* text/plain is the default, hence this option could be omitted. */
-  REST.set_header_etag(response, (uint8_t *)&length, 1);
-  REST.set_response_payload(response, buffer, length);
+    REST.set_response_status(response, REST.status.NOT_ACCEPTABLE);
+    const char *msg = "Supporting content-types text/plain, application/xml, and application/json";
+    REST.set_response_payload(response, msg, strlen(msg));
+  }
 }

@@ -21,6 +21,8 @@ ifeq ($(PREFIX),)
  PREFIX = fd00::1/64
 endif
 
+MODULES += core/net/llsec/adaptivesec
+
 CONTIKI_WITH_IPV6 = 1
 include $(CONTIKI)/Makefile.include
 
