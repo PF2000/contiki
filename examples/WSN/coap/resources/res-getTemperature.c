@@ -30,8 +30,8 @@ res_get_handler(void *request, void *response, uint8_t *buffer, uint16_t preferr
   if(dht22_read_all(&temperature, &humidity) != DHT22_ERROR) {
 
   }else{
-	temperature = -1;
-	humidity = -1;
+		temperature = -1;
+		humidity = -1;
   }
 
   snprintf((char *)buffer, REST_MAX_CHUNK_SIZE, 
