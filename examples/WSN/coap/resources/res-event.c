@@ -7,6 +7,8 @@
 #include "dev/adc-sensors.h"
 #include "dev/tsl256x.h"
 
+#include "AESMessage.h"
+
 #define DEBUG 0
 #if DEBUG
 #include <stdio.h>
@@ -27,12 +29,13 @@ static void res_event_handler(void);
  * Additionally takes a period parameter that defines the interval to call [name]_periodic_handler().
  * A default post_handler takes care of subscriptions and manages a list of subscribers to notify.
  */
-EVENT_RESOURCE(res_event,
+PERIODIC_RESOURCE(res_event,
                "title=\"Event demo\";obs",
                res_get_handler,
                NULL,
                NULL,
                NULL,
+               5 * CLOCK_SECOND,
                res_event_handler);
 
 /*

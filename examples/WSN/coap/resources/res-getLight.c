@@ -3,6 +3,7 @@
 #include <string.h>
 #include "rest-engine.h"
 #include "dev/tsl256x.h"
+#include "AESMessage.h"
 
 static int light;
 

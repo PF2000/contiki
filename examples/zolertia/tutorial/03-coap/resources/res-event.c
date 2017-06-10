@@ -27,12 +27,13 @@ static void res_event_handler(void);
  * Additionally takes a period parameter that defines the interval to call [name]_periodic_handler().
  * A default post_handler takes care of subscriptions and manages a list of subscribers to notify.
  */
-EVENT_RESOURCE(res_event,
+PERIODIC_RESOURCE(res_event,
                "title=\"Event demo\";obs",
                res_get_handler,
                NULL,
                NULL,
                NULL,
+               5 * CLOCK_SECOND,
                res_event_handler);
 
 /*
@@ -40,26 +41,10 @@ EVENT_RESOURCE(res_event,
  */
 static int32_t event_counter = 0;
 static int loudness,dbs,temperature,humidity,light;
-static char* strTemperature,strHumidity,strLoudness,strLight;
 
 static void
 res_get_handler(void *request, void *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
 {
-<<<<<<< HEAD
-  REST.set_header_content_type(response, REST.type.TEXT_PLAIN);
-
-
-	char str1[200];
-  uint8_t hexSend1[256];
-	
-	snprintf((char *)str1, preferred_size, "EVENT %lu", event_counter);
-
- int length = encriptMessage(str1, hexSend1);
-
-
-  REST.set_header_content_type(response, REST.type.TEXT_PLAIN); 
-  REST.set_response_payload(response, hexSend1, length);
-=======
   SENSORS_ACTIVATE(dht22);
   SENSORS_ACTIVATE(tsl256x);
 
@@ -104,8 +89,6 @@ res_get_handler(void *request, void *response, uint8_t *buffer, uint16_t preferr
              temperature / 10, temperature % 10,humidity / 10, humidity % 10,loudness,light);
 
   REST.set_response_payload(response, (uint8_t *)buffer, strlen((char *)buffer));
-  
->>>>>>> 423fd4b7372f15b5eed77aa6a05c9f1ba7cf876a
 }
 
 static void

@@ -9,13 +9,15 @@
 #include "AESMessage.h"
 
 
+uint8_t key[16];
+
 int
 encriptMessage(char *in, uint8_t *hexSend)
 {
 
 		//ONLY SENDS DATA UP TO 128 CHARS
 		
-		//OLD Key
+		//COMUNICATION KEY
     const	uint8_t MYKEY[16] = { 0x00 , 0x01 , 0x02 , 0x03 , 0x04 , 0x05 , 0x06 , 0x07 , 0x08 , 0x09 , 0x0A , 0x0B ,  0x0C , 0x0D , 0x0E , 0x0F };
 
 
@@ -46,10 +48,10 @@ encriptMessage(char *in, uint8_t *hexSend)
 
 
 		//ecriptar
-	 const uint8_t key[16] = { 0x00 , 0x01 , 0x02 , 0x03 ,
-                      0x04 , 0x05 , 0x06 , 0x07 ,
-                      0x08 , 0x09 , 0x0A , 0x0B ,
-                      0x0C , 0x0D , 0x0E , 0xFF };
+	 //const uint8_t key[16] = { 0x00 , 0x01 , 0x02 , 0x03 ,
+   //                   0x04 , 0x05 , 0x06 , 0x07 ,
+   //                   0x08 , 0x09 , 0x0A , 0x0B ,
+   //                   0x0C , 0x0D , 0x0E , 0xFF };
 
 	printf("length %d block %d \n", length ,block);
 
@@ -87,7 +89,7 @@ encriptMessage(char *in, uint8_t *hexSend)
 
 
 	//print hex cifrado estar cifrado
-  for(i=0;i<length;i++)
+	for(i=0;i<length;i++)
   {
       printf("%02X", hexSend[i]);      
   }
@@ -99,4 +101,14 @@ encriptMessage(char *in, uint8_t *hexSend)
 
 	return length;
 
+}
+
+void
+printKeyuint8(uint8_t *key)
+{
+	int i;
+	for (i=0; i<16; i++){
+		printf("%02X", (unsigned int)key[i]); //0x%02x
+	}
+	printf("\n");
 }

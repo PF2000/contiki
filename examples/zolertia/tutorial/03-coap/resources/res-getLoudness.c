@@ -4,6 +4,7 @@
 #include <math.h>
 #include "rest-engine.h"
 #include "dev/adc-sensors.h"
+#include "AESMessage.h"
 
 static int loudness,dbs;
 

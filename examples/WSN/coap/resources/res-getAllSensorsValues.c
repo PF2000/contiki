@@ -6,6 +6,7 @@
 #include "dev/dht22.h"
 #include "dev/adc-sensors.h"
 #include "dev/tsl256x.h"
+#include "AESMessage.h"
 
 static int loudness,dbs,temperature,humidity,light;
 

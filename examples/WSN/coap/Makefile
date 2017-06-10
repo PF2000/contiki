@@ -1,12 +1,6 @@
 all: er-example-server
 
-<<<<<<< HEAD
 CONTIKI = ../../..
-=======
-#CONTIKI = ../../../..
-CONTIKI = ../../..
-
->>>>>>> 423fd4b7372f15b5eed77aa6a05c9f1ba7cf876a
 
 CFLAGS += -DPROJECT_CONF_H=\"project-conf.h\"
 
@@ -19,6 +13,8 @@ REST_RESOURCES_DIR = ./resources
 REST_RESOURCES_FILES = $(notdir $(shell find $(REST_RESOURCES_DIR) -name '*.c'))
 PROJECTDIRS += $(REST_RESOURCES_DIR)
 PROJECT_SOURCEFILES +=  AESMessage.c 
+PROJECT_SOURCEFILES +=  EECHelper.c 
+PROJECT_SOURCEFILES +=  Keys.c 
 PROJECT_SOURCEFILES +=  $(REST_RESOURCES_FILES)  
 
 

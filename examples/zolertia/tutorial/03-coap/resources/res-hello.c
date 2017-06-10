@@ -40,6 +40,13 @@
 #include <string.h>
 #include "rest-engine.h"
 
+#include "lib/aes-128.h"
+#include "math.h"
+
+#include "AESMessage.h"
+
+
+
 static void res_get_handler(void *request, void *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset);
 
 /*
@@ -55,27 +62,23 @@ RESOURCE(res_hello,
          NULL,
          NULL);
 
+
+
+
 static void
 res_get_handler(void *request, void *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
 {
-  const char *len = NULL;
-  /* Some data that has the length up to REST_MAX_CHUNK_SIZE. For more, see the chunk resource. */
-  char const *const message = "Hello World! ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxy";
-  int length = 12; /*           |<-------->| */
 
-  /* The query string can be retrieved by rest_get_query() or parsed for its key-value pairs. */
-  if(REST.get_query_variable(request, "len", &len)) {
-    length = atoi(len);
-    if(length < 0) {
-      length = 0;
-    }
-    if(length > REST_MAX_CHUNK_SIZE) {
-      length = REST_MAX_CHUNK_SIZE;
-    }
-    memcpy(buffer, message, length);
-  } else {
-    memcpy(buffer, message, length);
-  } REST.set_header_content_type(response, REST.type.TEXT_PLAIN); /* text/plain is the default, hence this option could be omitted. */
-  REST.set_header_etag(response, (uint8_t *)&length, 1);
-  REST.set_response_payload(response, buffer, length);
+	char str1[200];
+  uint8_t hexSend1[256];
+	
+
+  strcpy(str1, "Hello World wsdfCenas234sdfgsdfsdfgsdfggaaaaaaaaaaaaaaaaa32653456aaaaaaa67aaaa5aaaaaaa3456aaaaaaaa76aa5aa56aaaasdfasdfasdfay");
+
+ int length = encriptMessage(str1, hexSend1);
+
+
+  REST.set_header_content_type(response, REST.type.TEXT_PLAIN); 
+  REST.set_response_payload(response, hexSend1, length);
+
 }

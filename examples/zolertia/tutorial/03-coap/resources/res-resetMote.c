@@ -16,7 +16,6 @@ RESOURCE(res_resetMote,
 static void
 res_get_handler(void *request, void *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
 {
-  const char *len = NULL;
   int length = 12;
   char const *const message = "Sucess";
   

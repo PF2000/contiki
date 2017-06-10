@@ -5,7 +5,7 @@
 #include "contiki.h"
 #include "contiki-net.h"
 #include "rest-engine.h"
-<<<<<<< HEAD
+
 #include "sys/timer.h"
 #include "sys/process.h"
 #include "sys/pt.h"
@@ -18,19 +18,19 @@
 #include <string.h>
 #include <stdio.h>
 
-=======
+
 #include "sys/etimer.h"
 #include "dev/dht22.h"
 //luz
 #include "dev/tsl256x.h"
 //som
 #include "dev/adc-sensors.h"
->>>>>>> 423fd4b7372f15b5eed77aa6a05c9f1ba7cf876a
+
 
 #include "dev/adc-zoul.h"
 #include "dev/zoul-sensors.h"
 #include "dev/button-sensor.h"
-<<<<<<< HEAD
+
 
 
 uint32_t brPubKeyX[6] ;	
@@ -40,8 +40,7 @@ uint32_t MyPubKeyX[6] ;
 uint32_t MyPubKeyY[6] ;	
 
 
-=======
->>>>>>> 423fd4b7372f15b5eed77aa6a05c9f1ba7cf876a
+
 /*---------------------------------------------------------------------------*/
 #define DEBUG 1
 #if DEBUG
@@ -63,7 +62,7 @@ uint32_t MyPubKeyY[6] ;
  */
 
 extern resource_t
-  ////res_hello,
+  res_hello,
   res_leds,
   res_ledr,
   res_ledg,
@@ -80,15 +79,11 @@ extern resource_t
   res_toggle,
   //res_ecc,
   //res_pubKeys,
-#if CONTIKI_TARGET_ZOUL
   res_mirror,
   res_push,
   res_sub,
   res_sht25,
   res_zoul,
-#else /* Default is Z1 */
-  res_adxl345,
-#endif
   res_event,
   res_separate;
 /*---------------------------------------------------------------------------*/
@@ -137,8 +132,7 @@ PROCESS_THREAD(er_example_server, ev, data)
 
   /* Enable the sensors and devices */
   SENSORS_ACTIVATE(button_sensor);
-<<<<<<< HEAD
-=======
+
 
   //sensor de temperature e humidade
   SENSORS_ACTIVATE(dht22);
@@ -147,11 +141,6 @@ PROCESS_THREAD(er_example_server, ev, data)
   //Sound sensor is on the 5V - pin 2
   adc_sensors.configure(ANALOG_GROVE_LOUDNESS, 2);
 
-  //Configure light sensor
-  tsl256x.configure(TSL256X_INT_OVER, 0x15B8);
-
-#if CONTIKI_TARGET_ZOUL
->>>>>>> 423fd4b7372f15b5eed77aa6a05c9f1ba7cf876a
   adc_zoul.configure(SENSORS_HW_INIT, ZOUL_SENSORS_ADC_ALL);
 
 
@@ -160,7 +149,7 @@ PROCESS_THREAD(er_example_server, ev, data)
    * WARNING: Activating twice only means alternate path, not two instances!
    * All static variables are the same for each URI path.
    */
-  ////rest_activate_resource(&res_hello, "test/hello");
+  rest_activate_resource(&res_hello, "test/hello");
   ////rest_activate_resource(&res_battery, "data/battery");
   //rest_activate_resource(&res_address, "data/address");
   rest_activate_resource(&res_resetMote, "data/resetMote");
@@ -183,26 +172,15 @@ PROCESS_THREAD(er_example_server, ev, data)
   rest_activate_resource(&res_sub, "test/sub");
   rest_activate_resource(&res_sht25, "sensors/sht25");
   rest_activate_resource(&res_zoul, "sensors/zoul");
-<<<<<<< HEAD
-
-=======
-#else
-  rest_activate_resource(&res_adxl345, "sensors/adxl345");
-#endif
-  
->>>>>>> 423fd4b7372f15b5eed77aa6a05c9f1ba7cf876a
 
   printf("\nCoAP server started\n");
   print_radio_values();
 
   while(1) {
-    static struct etimer et;
-    etimer_set(&et,CLOCK_SECOND*5);
     /* Wait forever */
     PROCESS_YIELD();
 
-    //if(ev == sensors_event && data == &button_sensor) {
-    if(etimer_expired(&et)) {
+    if(ev == sensors_event && data == &button_sensor) {
       /* Call the event_handler for this application-specific event. */
       res_event.trigger();
 

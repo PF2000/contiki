@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "rest-engine.h"
-
+#include "AESMessage.h"
 #include "dev/dht22.h"
 
 static void res_get_handler(void *request, void *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset);
@@ -30,7 +30,7 @@ res_get_handler(void *request, void *response, uint8_t *buffer, uint16_t preferr
   }
 
   snprintf((char *)buffer, REST_MAX_CHUNK_SIZE, 
-	    "{\"Sensors\":{\"Humidity\":\"%02d\"}}",
+	    "{\"Sensors\":{\"Humidity\":\"%02d.%02d\"}}",
              humidity / 10, humidity % 10);
 
   REST.set_response_payload(response, (uint8_t *)buffer, strlen((char *)buffer));

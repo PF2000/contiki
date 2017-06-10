@@ -6,9 +6,9 @@
 #include "dev/dht22.h"
 #include "dev/adc-sensors.h"
 #include "dev/tsl256x.h"
+#include "AESMessage.h"
 
 static int loudness,dbs,temperature,humidity,light;
-static char * strTemperature,strHumidity,strLoud;
 
 static void res_get_handler(void *request, void *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset);
 
@@ -62,7 +62,7 @@ res_get_handler(void *request, void *response, uint8_t *buffer, uint16_t preferr
 
   
   snprintf((char *)buffer, REST_MAX_CHUNK_SIZE, 
-	    "{\"Sensors\":{\"Temperature\":\"%02d\",\"Humidity\":\"%02d\",\"Loudness\":\"%02d\",\"Light\":\"%02d\"}}",
+	    "{\"Sensors\":{\"Temperature\":\"%02d.%02d\",\"Humidity\":\"%02d.%02d\",\"Loudness\":\"%02d\",\"Light\":\"%02d\"}}",
              temperature / 10, temperature % 10,humidity / 10, humidity % 10,loudness,light);
 
   REST.set_response_payload(response, (uint8_t *)buffer, strlen((char *)buffer));
