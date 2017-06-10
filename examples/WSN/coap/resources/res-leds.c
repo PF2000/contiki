@@ -42,7 +42,7 @@
 #include "rest-engine.h"
 #include "dev/leds.h"
 
-#define DEBUG 1
+#define DEBUG 0
 #if DEBUG
 #include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)
@@ -67,7 +67,6 @@ RESOURCE(res_leds,
 static void
 res_post_put_handler(void *request, void *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
 {
-  printf("chegou\n");
   size_t len = 0;
   const char *color = NULL;
   const char *mode = NULL;

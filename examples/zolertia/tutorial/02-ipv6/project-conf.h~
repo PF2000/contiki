@@ -31,6 +31,9 @@
 #ifndef PROJECT_CONF_H_
 #define PROJECT_CONF_H_
 
+#define IEEE_ADDR_CONF_HARDCODED 1
+#define IEEE_ADDR_CONF_ADDRESS { 0x00, 0x12, 0x4B, 0x00, 0x89, 0xAB, 0x01, 0x01 }
+
 /* Comment this out to use Radio Duty Cycle (RDC) and save energy */
 #undef NETSTACK_CONF_RDC
 #define NETSTACK_CONF_RDC          nullrdc_driver
@@ -68,15 +71,15 @@
 /* Security */
 
 #ifndef CRYPTO_CONF_INIT
-#define CRYPTO_CONF_INIT        1 /**< Whether to init cryptoprocessor */
+#define CRYPTO_CONF_INIT        1 
 #endif
 
 #ifndef AES_128_CONF
-#define AES_128_CONF            cc2538_aes_128_driver /**< AES-128 driver */
+#define AES_128_CONF            cc2538_aes_128_driver 
 #endif
 
 #ifndef CCM_STAR_CONF
-#define CCM_STAR_CONF           cc2538_ccm_star_driver /**< AES-CCM* driver */
+#define CCM_STAR_CONF           cc2538_ccm_star_driver 
 #endif
 
 #undef LLSEC802154_CONF_ENABLED
@@ -88,7 +91,7 @@
 #undef NONCORESEC_CONF_SEC_LVL
 #define NONCORESEC_CONF_SEC_LVL          7
 
-#define NONCORESEC_CONF_KEY { 0x00 , 0x01 , 0x02 , 0x03 , \
+#define NONCORESEC_CONF_KEY  { 0x00 , 0x01 , 0x02 , 0x03 , \
                                0x04 , 0x05 , 0x06 , 0x07 , \
                                0x08 , 0x09 , 0x0A , 0x0B , \
                                0x0C , 0x0D , 0x0E , 0x0F }

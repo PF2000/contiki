@@ -60,7 +60,7 @@
 #if CONTIKI_TARGET_ZOUL
 
 #undef CC2538_RF_CONF_CHANNEL
-#define CC2538_RF_CONF_CHANNEL         26
+#define CC2538_RF_CONF_CHANNEL         20
 
 #define REST_MAX_CHUNK_SIZE            128//96
 
@@ -75,10 +75,10 @@
 
 /* Change Radio default parameters */
 #undef RF_CHANNEL
-#define RF_CHANNEL	               26
+#define RF_CHANNEL	               20
 
 #undef CC2420_CONF_CHANNEL
-#define CC2420_CONF_CHANNEL            26
+#define CC2420_CONF_CHANNEL            20
 
 #define REST_MAX_CHUNK_SIZE            48
 #endif
